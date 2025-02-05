@@ -65,9 +65,9 @@ jobs:
       - name: Gardar archivo CSV
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # <--- Cambio importante: Usar GITHUB_TOKEN
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
-          repository: ${{ github.repository }} # <---  Mismo repositorio
+          repository: ${{ github.repository }}
           files: resultados.csv
           message: 'Actualización de resultados de pruebas unitarias'
           force: false
