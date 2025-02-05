@@ -62,12 +62,12 @@ jobs:
         run: |
           echo "${{ steps.resultados.outputs.resultados }}" > resultados.csv
 
-      - name: Enviar archivo CSV a otro repositorio
+      - name: Gardar archivo CSV
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.REPO_TOKEN }} # Se utiliza el mismo token para ambos repositorios
-          branch: main # Reemplaza con la rama del repositorio destino
-          repository: ${{ github.repository }} # Se utiliza el mismo repositorio actual
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # <--- Cambio importante: Usar GITHUB_TOKEN
+          branch: main
+          repository: ${{ github.repository }} # <---  Mismo repositorio
           files: resultados.csv
-          message: 'Actualización de resultados de pruebas unitarias' # Mensaje de commit personalizado
-          force: false # Permite realizar merge en lugar de crear un nuevo commit
+          message: 'Actualización de resultados de pruebas unitarias'
+          force: false
