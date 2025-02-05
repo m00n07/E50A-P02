@@ -1,0 +1,66 @@
+name: Pruebas unitarias de la base de datos
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: universidad
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Conectar a PostgreSQL
+        uses: ankane/setup-postgres@v1
+        with:
+          postgres-version: 14
+          username: postgres
+          password: password
+          database: universidad
+
+      - name: Cargar esquema de la base de datos
+        run: |
+          psql -U postgres -d universidad -f schema.sql
+
+      - name: Insertar datos de prueba
+        run: |
+          psql -U postgres -d universidad -f data.sql
+
+      - name: Ejecutar pruebas unitarias
+        run: |
+          psql -U postgres -d universidad -f pruebas.sql
+
+      - name: Obtener resultados de las pruebas
+        id: resultados
+        run: |
+          resultados=$(psql -U postgres -d universidad -c "SELECT * FROM pruebas_unitarias;")
+          echo "::set-output name=resultados::$resultados"
+
+      - name: Generar archivo CSV
+        run: |
+          echo "${{ steps.resultados.outputs.resultados }}" > resultados.csv
+
+      - name: Enviar archivo CSV a otro repositorio
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.REPO_TOKEN }} # Se utiliza el mismo token para ambos repositorios
+          branch: main # Reemplaza con la rama del repositorio destino
+          repository: ${{ github.repository }} # Se utiliza el mismo repositorio actual
+          files: resultados.csv
+          message: 'Actualización de resultados de pruebas unitarias' # Mensaje de commit personalizado
+          force: false # Permite realizar merge en lugar de crear un nuevo commit
