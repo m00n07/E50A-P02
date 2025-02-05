@@ -34,20 +34,26 @@ jobs:
 
       - name: Cargar esquema de la base de datos
         run: |
-          psql -U postgres -d universidad -f schema.sql
+          psql -h localhost -U postgres -d universidad -f schema.sql
+        env:
+          PGPASSWORD: postgres
 
       - name: Insertar datos de prueba
         run: |
-          psql -U postgres -d universidad -f data.sql
+          psql -h localhost -U postgres -d universidad -f data.sql
+        env:
+          PGPASSWORD: postgres          
 
       - name: Ejecutar pruebas unitarias
         run: |
-          psql -U postgres -d universidad -f pruebas.sql
+          psql -h localhost -U postgres -d universidad -f pruebas.sql
+        env:
+          PGPASSWORD: postgres
 
       - name: Obtener resultados de las pruebas
         id: resultados
         run: |
-          resultados=$(psql -U postgres -d universidad -c "SELECT * FROM pruebas_unitarias;")
+          resultados=$(psql -h localhost -U postgres -d universidad -c "SELECT * FROM pruebas_unitarias;")
           echo "::set-output name=resultados::$resultados"
 
       - name: Generar archivo CSV
