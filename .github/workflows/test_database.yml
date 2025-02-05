@@ -9,29 +9,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     services:
       postgres:
-        image: postgres:14
+        image: postgres:latest
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: universidad
-        ports:
-          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+        - 5432:5432
 
     steps:
-      - name: Conectar a PostgreSQL
-        uses: ankane/setup-postgres@v1
-        with:
-          postgres-version: 14
-          username: postgres
-          password: password
-          database: universidad
+      - name: Check out repository code
+        uses: actions/checkout@v4      
+
+      - name: Wait for PostgreSQL to be ready
+        run: until pg_isready -h localhost -p 5432; do sleep 1; done
 
       - name: Cargar esquema de la base de datos
         run: |
