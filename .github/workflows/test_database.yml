@@ -53,7 +53,7 @@ jobs:
       - name: Obtener resultados de las pruebas
         id: resultados
         run: |
-          resultados=$(psql -U postgres -d universidad -c "SELECT * FROM pruebas_unitarias;")
+          resultados=$(psql -h localhost -U postgres -d universidad -c "SELECT * FROM pruebas_unitarias;")
           echo "resultados=$resultados" >> $GITHUB_OUTPUT
         env:
           PGPASSWORD: postgres          
