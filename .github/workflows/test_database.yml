@@ -62,23 +62,17 @@ jobs:
         run: |
           echo "${{ steps.resultados.outputs.resultados }}" > resultados.csv
 
-      - name: Commit y push de resultados
-        uses: stefanzweifel/git-cli-action@v2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          args: |
-            config user.name "github-actions[bot]"
-            config user.email "github-actions[bot]@users.noreply.github.com"
-            add resultados.csv
-            commit -m "Actualización de resultados de pruebas unitarias"
-            push origin main # o la rama que corresponda en tu repo destino
+      - name: Generar archivo CSV
+        run: |
+          echo "${{ steps.resultados.outputs.resultados }}" > resultados.csv
 
-      - name: Guardar archivo CSV
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          repository: ${{ github.repository }}
-          files: resultados.csv
-          message: 'Actualización de resultados de pruebas unitarias'
-          force: false
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: Commit y push de resultados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add resultados.csv
+          git commit -m "Actualización de resultados de pruebas unitarias"
+          git push origin main # o la rama que corresponda en tu repo destino
