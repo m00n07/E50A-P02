@@ -1,4 +1,4 @@
--- Initial attempt
+-- 2nd attempt
 
 CREATE TABLE ESTUDIANTE (
     id_estudiante SERIAL PRIMARY KEY,
