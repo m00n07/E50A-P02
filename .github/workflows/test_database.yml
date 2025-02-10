@@ -60,22 +60,18 @@ jobs:
         continue-on-error: true
         env:
           PGPASSWORD: postgres          
-
-      - name: Commit and push test results to results branch
+  
+      - name: Commit and push test results
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git config pull.rebase false  # Configurar para usar merge por defecto
-          git checkout -b results || git checkout results
-          git pull origin results --allow-unrelated-histories || true
+          git pull origin ${{ github.head_ref }} --allow-unrelated-histories || true
           git add results.csv
           git commit -m 'Update test results' || true
-          git pull --rebase origin results --allow-unrelated-histories || true
-          git merge --strategy-option theirs || true
-          git add .
-          git commit -m 'Resolve merge conflicts' || true
-          git push origin results --force
+          git pull --rebase origin ${{ github.head_ref }} --allow-unrelated-histories || true
+          git push origin ${{ github.head_ref }} --force
         env:
-          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
