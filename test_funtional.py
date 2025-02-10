@@ -8,9 +8,9 @@ class TestFunctional(unittest.TestCase):
 
     def setUp(self):
         self.conn = psycopg2.connect(
-            dbname="your_db",
-            user="your_user",
-            password="your_password",
+            dbname="universidad",
+            user="postgres",
+            password="postgres",
             host="localhost",
             port="5432"
         )
