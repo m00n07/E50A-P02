@@ -1,0 +1,118 @@
+import unittest
+import psycopg2
+from insert_data import insert_data
+import os
+import csv
+
+class TestFunctional(unittest.TestCase):
+
+    def setUp(self):
+        self.conn = psycopg2.connect(
+            dbname="your_db",
+            user="your_user",
+            password="your_password",
+            host="localhost",
+            port="5432"
+        )
+        self.cursor = self.conn.cursor()
+        insert_data()
+
+    def tearDown(self):
+        self.cursor.close()
+        self.conn.close()
+
+    def test_estudiante_data(self):
+        self.cursor.execute("SELECT * FROM ESTUDIANTE")
+        results = self.cursor.fetchall()
+        expected = [
+            ('Juan', 'Pérez', '2000-05-10'),
+            ('María', 'González', '2001-02-20'),
+            ('Carlos', 'López', '1999-11-15')
+        ]
+        self.assertEqual(results, expected)
+
+    def test_curso_data(self):
+        self.cursor.execute("SELECT * FROM CURSO")
+        results = self.cursor.fetchall()
+        expected = [
+            ('Introducción a la programación', 4),
+            ('Cálculo I', 5),
+            ('Física General', 4)
+        ]
+        self.assertEqual(results, expected)
+
+    def test_profesor_data(self):
+        self.cursor.execute("SELECT * FROM PROFESOR")
+        results = self.cursor.fetchall()
+        expected = [
+            ('Ana Rodríguez', 'Ciencias de la Computación'),
+            ('Luis Sánchez', 'Matemáticas'),
+            ('Sofía Martínez', 'Física')
+        ]
+        self.assertEqual(results, expected)
+
+    def test_inscripcion_data(self):
+        self.cursor.execute("SELECT * FROM INSCRIPCION")
+        results = self.cursor.fetchall()
+        expected = [
+            (1, 1, '2023-08-20'),
+            (2, 2, '2023-08-20'),
+            (3, 3, '2023-08-20')
+        ]
+        self.assertEqual(results, expected)
+
+    def test_enseña_data(self):
+        self.cursor.execute("SELECT * FROM ENSEÑA")
+        results = self.cursor.fetchall()
+        expected = [
+            (1, 1),
+            (2, 2),
+            (3, 3)
+        ]
+        self.assertEqual(results, expected)
+
+    def tearDown(self):
+        self.cursor.close()
+        self.conn.close()
+
+    def addSuccess(self, test):
+        username = os.getenv('GITHUB_ACTOR', 'unknown')
+        results = [
+            {'test': test._testMethodName, 'result': 'passed', 'user': username}
+        ]
+        file_exists = os.path.isfile('results.csv')
+        with open('results.csv', 'a', newline='') as csvfile:
+            fieldnames = ['test', 'result', 'user']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            if not file_exists:
+                writer.writeheader()
+            writer.writerows(results)
+
+    def addFailure(self, test, err):
+        username = os.getenv('GITHUB_ACTOR', 'unknown')
+        results = [
+            {'test': test._testMethodName, 'result': 'failed', 'user': username}
+        ]
+        file_exists = os.path.isfile('results.csv')
+        with open('results.csv', 'a', newline='') as csvfile:
+            fieldnames = ['test', 'result', 'user']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            if not file_exists:
+                writer.writeheader()
+            writer.writerows(results)
+
+    def addError(self, test, err):
+        username = os.getenv('GITHUB_ACTOR', 'unknown')
+        results = [
+            {'test': test._testMethodName, 'result': 'error', 'user': username}
+        ]
+        file_exists = os.path.isfile('results.csv')
+        with open('results.csv', 'a', newline='') as csvfile:
+            fieldnames = ['test', 'result', 'user']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            if not file_exists:
+                writer.writeheader()
+            writer.writerows(results)
+
+if __name__ == '__main__':
+    unittest.main(testRunner=unittest.TextTestRunner(resultclass=unittest.TextTestResult))
