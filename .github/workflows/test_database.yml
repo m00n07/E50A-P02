@@ -68,10 +68,10 @@ jobs:
           git config pull.rebase false  # Configurar para usar merge por defecto
           git checkout -b results || git checkout results
           git pull origin results --allow-unrelated-histories || true
-          git merge --strategy-option theirs || true
           git add results.csv
           git commit -m 'Update test results' || true
-          git push origin results || true
+          git pull --rebase origin results --allow-unrelated-histories || true
+          git push origin results --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
