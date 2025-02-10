@@ -42,25 +42,29 @@ jobs:
         env:
           PGPASSWORD: postgres          
 
-      - name: Ejecutar pruebas unitarias
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+  
+      - name: Install dependencies
         run: |
-          psql -h localhost -U postgres -d universidad -f pruebas.sql
+          python -m pip install --upgrade pip
+          pip install pytest pytest-csv psycopg2-binary
+
+      - name: Run tests and save results
+        run: |
+          pytest src/test_database.py
+  
+      - name: Commit and push test results to results branch
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git checkout -b results || git checkout results
+          git pull origin results
+          git add results.csv
+          git commit -m 'Update test results'
+          git push origin results
         env:
-          PGPASSWORD: postgres                  
-
-      - name: Generar archivo CSV
-        run: |
-          echo "${{ steps.resultados.outputs.resultados }}" > resultados.csv
-
-      - name: Checkout del repositorio
-        uses: actions/checkout@v3
-
-      - name: Commit y push de resultados
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add resultados.csv
-          git commit -m "Actualización de resultados de pruebas unitarias"
-          git push origin main
-
-# ... (resto del flujo)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}          
