@@ -71,18 +71,15 @@ class TestFunctional(unittest.TestCase):
         ]
         self.assertEqual(results, expected)
 
-    def tearDown(self):
-        self.cursor.close()
-        self.conn.close()
-
     def addSuccess(self, test):
         username = os.getenv('GITHUB_ACTOR', 'unknown')
+        branch = os.getenv('GITHUB_REF_NAME', 'unknown')
         results = [
-            {'test': test._testMethodName, 'result': 'passed', 'user': username}
+            {'test': test._testMethodName, 'result': 'passed', 'user': username, 'branch': branch}
         ]
         file_exists = os.path.isfile('results.csv')
         with open('results.csv', 'a', newline='') as csvfile:
-            fieldnames = ['test', 'result', 'user']
+            fieldnames = ['test', 'result', 'user', 'branch']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             if not file_exists:
                 writer.writeheader()
@@ -90,12 +87,13 @@ class TestFunctional(unittest.TestCase):
 
     def addFailure(self, test, err):
         username = os.getenv('GITHUB_ACTOR', 'unknown')
+        branch = os.getenv('GITHUB_REF_NAME', 'unknown')
         results = [
-            {'test': test._testMethodName, 'result': 'failed', 'user': username}
+            {'test': test._testMethodName, 'result': 'failed', 'user': username, 'branch': branch}
         ]
         file_exists = os.path.isfile('results.csv')
         with open('results.csv', 'a', newline='') as csvfile:
-            fieldnames = ['test', 'result', 'user']
+            fieldnames = ['test', 'result', 'user', 'branch']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             if not file_exists:
                 writer.writeheader()
@@ -103,12 +101,13 @@ class TestFunctional(unittest.TestCase):
 
     def addError(self, test, err):
         username = os.getenv('GITHUB_ACTOR', 'unknown')
+        branch = os.getenv('GITHUB_REF_NAME', 'unknown')
         results = [
-            {'test': test._testMethodName, 'result': 'error', 'user': username}
+            {'test': test._testMethodName, 'result': 'error', 'user': username, 'branch': branch}
         ]
         file_exists = os.path.isfile('results.csv')
         with open('results.csv', 'a', newline='') as csvfile:
-            fieldnames = ['test', 'result', 'user']
+            fieldnames = ['test', 'result', 'user', 'branch']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             if not file_exists:
                 writer.writeheader()
