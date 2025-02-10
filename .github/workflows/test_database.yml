@@ -54,7 +54,7 @@ jobs:
 
       - name: Run tests and save results
         run: |
-          pytest src/test_database.py
+          pytest test_database.py
   
       - name: Commit and push test results to results branch
         run: |
