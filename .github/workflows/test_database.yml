@@ -54,7 +54,9 @@ jobs:
 
       - name: Run tests and save results
         run: |
-          pytest test_database.py
+          pytest test_functional.py
+        env:
+          PGPASSWORD: postgres          
   
       - name: Commit and push test results to results branch
         run: |
