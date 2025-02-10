@@ -67,7 +67,7 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           git config pull.rebase false  # Configurar para usar merge por defecto
           git checkout -b results || git checkout results
-          git pull origin results
+          git pull origin results --allow-unrelated-histories
           git add results.csv
           git commit -m 'Update test results'
           git push origin results
