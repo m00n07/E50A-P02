@@ -24,9 +24,9 @@ class TestFunctional(unittest.TestCase):
         self.cursor.execute("SELECT * FROM ESTUDIANTE")
         results = self.cursor.fetchall()
         expected = [
-            (1, 'Juan', 'Pérez', '2000-05-10'),
-            (2, 'María', 'González', '2001-02-20'),
-            (3, 'Carlos', 'López', '1999-11-15')
+            (1, 'Juan', 'Pérez', date('2000-05-10')),
+            (2, 'María', 'González', date('2001-02-20')),
+            (3, 'Carlos', 'López', date('1999-11-15'))
         ]
         self.assertEqual(results, expected)
 
