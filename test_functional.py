@@ -14,7 +14,6 @@ class TestFunctional(unittest.TestCase):
             port="5432"
         )
         self.cursor = self.conn.cursor()
-        insert_data()
 
     def tearDown(self):
         self.cursor.close()
