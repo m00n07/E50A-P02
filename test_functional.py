@@ -2,6 +2,7 @@ import unittest
 import psycopg2
 import os
 import csv
+from datetime import date
 
 class TestFunctional(unittest.TestCase):
 
@@ -53,9 +54,9 @@ class TestFunctional(unittest.TestCase):
         self.cursor.execute("SELECT * FROM INSCRIPCION")
         results = self.cursor.fetchall()
         expected = [
-            (1, 1, '2023-08-20'),
-            (2, 2, '2023-08-20'),
-            (3, 3, '2023-08-20')
+            (1, 1, date('2023-08-20')),
+            (2, 2, date('2023-08-20')),
+            (3, 3, date('2023-08-20'))
         ]
         self.assertEqual(results, expected)
 
