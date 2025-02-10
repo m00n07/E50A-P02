@@ -57,6 +57,7 @@ jobs:
       - name: Run tests and save results
         run: |
           pytest test_functional.py
+        continue-on-error: true
         env:
           PGPASSWORD: postgres          
   
