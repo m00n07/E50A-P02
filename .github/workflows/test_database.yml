@@ -46,15 +46,7 @@ jobs:
         run: |
           psql -h localhost -U postgres -d universidad -f pruebas.sql
         env:
-          PGPASSWORD: postgres         
-
-      - name: Obtener resultados de las pruebas
-        id: resultados
-        run: |
-          resultados=$(psql -h localhost -U postgres -d universidad -c "SELECT * FROM pruebas_unitarias;" -At | sed '1d') # <--- Modificado
-          echo "resultados=$resultados" >> $GITHUB_OUTPUT
-        env:
-          PGPASSWORD: postgres           
+          PGPASSWORD: postgres                  
 
       - name: Generar archivo CSV
         run: |
