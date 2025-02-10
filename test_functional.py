@@ -1,5 +1,6 @@
 import unittest
 import psycopg2
+from insert_data import insert_data
 import os
 import csv
 
@@ -7,13 +8,14 @@ class TestFunctional(unittest.TestCase):
 
     def setUp(self):
         self.conn = psycopg2.connect(
-            dbname="universidad",
-            user="postgres",
-            password="postgres",
+            dbname="your_db",
+            user="your_user",
+            password="your_password",
             host="localhost",
             port="5432"
         )
         self.cursor = self.conn.cursor()
+        insert_data()
 
     def tearDown(self):
         self.cursor.close()
@@ -23,9 +25,9 @@ class TestFunctional(unittest.TestCase):
         self.cursor.execute("SELECT * FROM ESTUDIANTE")
         results = self.cursor.fetchall()
         expected = [
-            ('Juan', 'Pérez', '2000-05-10'),
-            ('María', 'González', '2001-02-20'),
-            ('Carlos', 'López', '1999-11-15')
+            (1, 'Juan', 'Pérez', '2000-05-10'),
+            (2, 'María', 'González', '2001-02-20'),
+            (3, 'Carlos', 'López', '1999-11-15')
         ]
         self.assertEqual(results, expected)
 
@@ -33,9 +35,9 @@ class TestFunctional(unittest.TestCase):
         self.cursor.execute("SELECT * FROM CURSO")
         results = self.cursor.fetchall()
         expected = [
-            ('Introducción a la programación', 4),
-            ('Cálculo I', 5),
-            ('Física General', 4)
+            (1, 'Introducción a la programación', 4),
+            (2, 'Cálculo I', 5),
+            (3, 'Física General', 4)
         ]
         self.assertEqual(results, expected)
 
@@ -43,9 +45,9 @@ class TestFunctional(unittest.TestCase):
         self.cursor.execute("SELECT * FROM PROFESOR")
         results = self.cursor.fetchall()
         expected = [
-            ('Ana Rodríguez', 'Ciencias de la Computación'),
-            ('Luis Sánchez', 'Matemáticas'),
-            ('Sofía Martínez', 'Física')
+            (1, 'Ana Rodríguez', 'Ciencias de la Computación'),
+            (2, 'Luis Sánchez', 'Matemáticas'),
+            (3, 'Sofía Martínez', 'Física')
         ]
         self.assertEqual(results, expected)
 
