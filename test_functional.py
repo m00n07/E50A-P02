@@ -1,6 +1,5 @@
 import unittest
 import psycopg2
-from insert_data import insert_data
 import os
 import csv
 
