@@ -1,6 +1,5 @@
 import unittest
 import psycopg2
-from insert_data import insert_data
 import os
 import csv
 
@@ -15,7 +14,6 @@ class TestFunctional(unittest.TestCase):
             port="5432"
         )
         self.cursor = self.conn.cursor()
-        insert_data()
 
     def tearDown(self):
         self.cursor.close()
