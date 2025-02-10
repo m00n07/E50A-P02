@@ -60,7 +60,7 @@ jobs:
         continue-on-error: true
         env:
           PGPASSWORD: postgres          
-    
+
       - name: Commit and push test results to results branch
         run: |
           git config --global user.name 'github-actions'
@@ -71,6 +71,9 @@ jobs:
           git add results.csv
           git commit -m 'Update test results' || true
           git pull --rebase origin results --allow-unrelated-histories || true
+          git merge --strategy-option theirs || true
+          git add .
+          git commit -m 'Resolve merge conflicts' || true
           git push origin results --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
