@@ -55,7 +55,6 @@ INSERT INTO enseña (id_profesor, id_curso) VALUES
 (2, 2),
 (3, 3);
 
-
 SELECT * FROM  estudiante;
 SELECT * FROM  curso;
 SELECT * FROM  profesor;
